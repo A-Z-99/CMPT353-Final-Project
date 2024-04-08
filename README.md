@@ -1,9 +1,16 @@
 # Notes
-In 2007 most of the stocks listed are large-cap stocks. In 2017, significantly more of the stocks listed are small-cap stocks. This leads to the average_low_high measurements in 2017 being a lot lower in 2017 than in 2007.
+Each subtopic of the project is contained in a directory with the individual analyses contained in subdirectories.
+Read the readmes for any setup information. If no readme is present, just run `run-pipeline.py` (ensure your current directory is the same as `run-pipeline.py`)
 
-# Steps
-download dataset from https://www.kaggle.com/datasets/borismarjanovic/price-volume-data-for-all-us-stocks-etfs
 
-`spark-submit stocksETL.py Data/Stocks stocksData`
+# Dataset sources
 
-`python3 MondayFriday.py`
+## S&P index datasets
+https://www.marketwatch.com/investing/index/spx/ (limited to 1 year per download but goes very far back)
+
+https://www.nasdaq.com/market-activity/index/spx/historical (only goes back 10 years from the current day)
+
+## Stock collection datasets
+https://www.kaggle.com/datasets/borismarjanovic/price-volume-data-for-all-us-stocks-etfs (large, but only goes up to 2017, also only starts including small-cap stocks around the 2010s)
+
+https://www.kaggle.com/datasets/andrewmvd/sp-500-stocks/data (top 500 stocks, used to create the S&P500. Currently not used in this project.)

@@ -1,5 +1,5 @@
 import sys
-from pyspark.sql import SparkSession, functions, types, Window
+from pyspark.sql import SparkSession, functions, types
 
 spark = SparkSession.builder.appName('reddit averages').getOrCreate()
 spark.sparkContext.setLogLevel('WARN')

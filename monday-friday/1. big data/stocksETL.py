@@ -1,7 +1,7 @@
 import sys
 from pyspark.sql import SparkSession, functions, types
 
-spark = SparkSession.builder.appName('reddit averages').getOrCreate()
+spark = SparkSession.builder.appName('stocks ETL').getOrCreate()
 spark.sparkContext.setLogLevel('WARN')
 
 assert sys.version_info >= (3, 5) # make sure we have Python 3.5+
@@ -19,7 +19,7 @@ data_schema = types.StructType([
 ])
 
 
-def main(in_directory, out_directory):
+def main(in_directory):
 
     df = spark.read.csv(in_directory, schema=data_schema, sep=",") # .withColumn('filename', functions.input_file_name())
 
@@ -58,38 +58,7 @@ def main(in_directory, out_directory):
     data_2006.write.csv("2006 data", mode='overwrite')
     data_2016.write.csv("2016 data", mode='overwrite')
 
-    # # Show the DataFrame
-    # df.show()
-    # # drop language != 'en'
-    # data = data.filter(data['language'] == 'en')
-
-    # # drop title == 'main page'
-    # data = data.filter(data['title'] != 'Main_Page')
-
-    # # drop title.startsWith('Special:')
-    # data = data.filter(~data['title'].startswith('Special:'))
-
-    # # Get timestamp
-    # data = data.withColumn('timestamp', functions.regexp_extract(functions.col('filename'), 'pagecounts-(\d{8}-\d{2})', 1))
-    
-    # data.cache()
-    # # Group by timestamp and find max views
-    # highest_pagecounts = data.groupBy('timestamp').agg(
-    #     functions.max('views').alias('views')
-    # )
-
-    # highest_pagecounts.show()
-
-    # # Join max views back into the original DataFrame
-    # highest_pagecounts = data.join(highest_pagecounts, ['timestamp','views'], 'inner').select('timestamp', 'title', 'views')
-
-    # # Sort by date/hour (major) and title (minor)
-    # highest_pagecounts = highest_pagecounts.orderBy('timestamp', 'title')
-
-    # highest_pagecounts.write.csv(out_directory, mode='overwrite')
-
 
 if __name__=='__main__':
     in_directory = sys.argv[1]
-    out_directory = sys.argv[2]
-    main(in_directory, out_directory)
+    main(in_directory)

@@ -62,38 +62,11 @@ pairs_2006 = pd.merge_asof(mondays_2006.sort_values('Monday'), fridays_2006.sort
 pairs_2016 = pd.merge_asof(mondays_2016.sort_values('Monday'), fridays_2016.sort_values('Friday'), 
                             left_on='Monday', right_on='Friday', direction='backward', tolerance=pd.Timedelta(days=3))
 
-print(pairs_2006.head())
-print(pairs_2016.head())
-
 # Change indicates the change between the value on Friday and the value on Monday
 pairs_2006['change'] = pairs_2006['Monday_value'] - pairs_2006['Friday_value'] 
 pairs_2016['change'] = pairs_2016['Monday_value'] - pairs_2016['Friday_value']
 pairs_2006['change percent'] = pairs_2006['change']/pairs_2006['Friday_value']*100
 pairs_2016['change percent'] = pairs_2016['change']/pairs_2016['Friday_value']*100
-
-""""""""
-
-# Plot date on the x-axis and value on the y-axis for 2006 data
-pairs_2006.plot(x='Monday', y='change percent', kind='scatter')
-
-# Add labels and title
-plt.xlabel('Date')
-plt.ylabel('Change')
-plt.title('Percent change from Friday to Monday (2006)')
-
-# Show the plot
-plt.show()
-
-# Plot date on the x-axis and value on the y-axis for 2016 data
-pairs_2016.plot(x='Monday', y='change percent', kind='scatter')
-
-# Add labels and title
-plt.xlabel('Date')
-plt.ylabel('Change')
-plt.title('Percent change from Friday to Monday (2016)')
-
-# Show the plot
-plt.show()
 
 # Check for missing values in the 'change percent' column
 missing_values_2006 = pairs_2006['change percent'].isnull().any()
@@ -106,19 +79,77 @@ if missing_values_2006 or missing_values_2016:
     pairs_2006.dropna(subset=['change percent'], inplace=True)
     pairs_2016.dropna(subset=['change percent'], inplace=True)
 
+pairs_2006.to_csv("2006 pairs.csv", index=False)
+pairs_2016.to_csv("2016 pairs.csv", index=False)
+
+""""""""
+
+# Plot date on the x-axis and value on the y-axis for 2006 data
+pairs_2006.plot(x='Monday', y='change percent', kind='scatter')
+plt.axhline(y=0, color='black', linestyle='--')
+
+# Add labels and title
+plt.xlabel('Date')
+plt.ylabel('Change')
+plt.title('Percent change from Friday to Monday (2006)')
+
+plt.savefig("2006 Percent change.png")
+
+# Plot date on the x-axis and value on the y-axis for 2016 data
+pairs_2016.plot(x='Monday', y='change percent', kind='scatter', color='green')
+plt.axhline(y=0, color='black', linestyle='--')
+
+# Add labels and title
+plt.xlabel('Date')
+plt.ylabel('Change')
+plt.title('Percent change from Friday to Monday (2016)')
+
+plt.savefig("2016 Percent change.png")
+
+
+# Plot histogram of percent changes for 2006
+
+plt.figure(figsize=(10, 6))
+
+plt.hist(pairs_2006['change percent'], bins=20, color='blue', alpha=0.7)
+
+# Add vertical line at mean
+mean_percent_change_2006 = pairs_2006['change percent'].mean()
+plt.axvline(x=mean_percent_change_2006, color='red', linestyle='--', label=f'Mean: {mean_percent_change_2006:.2f}')  
+
+
+# Add labels and title
+plt.xlabel('Percent Change')
+plt.ylabel('Frequency')
+plt.title('Histogram of Percent Changes (2006)')
+plt.legend()
+plt.savefig("2006 Percent Changes Histogram.png")
+
+# Plot histogram of percent changes for 2016
+plt.figure(figsize=(10, 6))
+
+plt.hist(pairs_2016['change percent'], bins=20, color='green', alpha=0.7)
+
+# Add vertical line at mean
+mean_percent_change_2016 = pairs_2016['change percent'].mean()
+plt.axvline(x=mean_percent_change_2016, color='red', linestyle='--', label=f'Mean: {mean_percent_change_2016:.2f}')
+
+# plt.axvline(x=0, color='black', linestyle='--')
+
+# Add labels and title
+plt.xlabel('Percent Change')
+plt.ylabel('Frequency')
+plt.title('Histogram of Percent Changes (2016)')
+plt.legend()
+plt.savefig("2016 Percent Changes Histogram.png")
+
+"""
+Perform statistical tests
+"""
 # Perform the Wilcoxon signed-rank test
-statistic_2006, p_value_2006 = wilcoxon(pairs_2006['change percent'], zero_method='wilcox')
-statistic_2016, p_value_2016 = wilcoxon(pairs_2016['change percent'], zero_method='wilcox')
+wilcoxon_2006 = wilcoxon(pairs_2006['change percent'], zero_method='wilcox')
+wilcoxon_2016 = wilcoxon(pairs_2016['change percent'], zero_method='wilcox')
 
-print("2006 - Wilcoxon Statistic:", statistic_2006)
-print("2006 - p-value:", p_value_2006)
-
-print("2016 - Wilcoxon Statistic:", statistic_2016)
-print("2016 - p-value:", p_value_2016)
-
-"""
-Perform Binomial test
-"""
 # Calculate the number of negative changes
 negative_changes_2006 = (pairs_2006['change percent'] < 0).sum()
 negative_changes_2016 = (pairs_2016['change percent'] < 0).sum()
@@ -128,40 +159,46 @@ total_changes_2006 = len(pairs_2006)
 total_changes_2016 = len(pairs_2016)
 
 # Perform the sign test
-p_value_2006 = binom.cdf(negative_changes_2006, total_changes_2006, 0.5)
-p_value_2016 = binom.cdf(negative_changes_2016, total_changes_2016, 0.5)
+binom_p_value_2006 = binom.cdf(negative_changes_2006, total_changes_2006, 0.5)
+binom_p_value_2016 = binom.cdf(negative_changes_2016, total_changes_2016, 0.5)
 
-print("2006 - Number of Negative Changes:", negative_changes_2006)
-print("2006 - Total Changes:", total_changes_2006)
-print("2006 - Probability of Negative Change:", p_value_2006)
+with open('summary.txt', 'w') as f:
+    # Redirect stdout to the file
+    import sys
+    sys.stdout = f
+    print("2006 - Wilcoxon p-value:", wilcoxon_2006.pvalue)
+    print("2006 - Number of Negative Changes:", negative_changes_2006)
+    print("2006 - Total Changes:", total_changes_2006)
+    print("2006 - Binomial p-value:", binom_p_value_2006)
+    print("2006 - Average monday value:", pairs_2006['Monday_value'].mean())
+    print("2006 - Average friday value:", pairs_2006['Friday_value'].mean())
+    print()
 
-print("2016 - Number of Negative Changes:", negative_changes_2016)
-print("2016 - Total Changes:", total_changes_2016)
-print("2016 - Probability of Negative Change:", p_value_2016)
+    print("2016 - Wilcoxon p-value:", wilcoxon_2016.pvalue)
+    print("2016 - Number of Negative Changes:", negative_changes_2016)
+    print("2016 - Total Changes:", total_changes_2016)
+    print("2016 - Binomial p-value:", binom_p_value_2016)
+    print("2016 - Average monday value:", pairs_2016['Monday_value'].mean())
+    print("2016 - Average friday value:", pairs_2016['Friday_value'].mean())
 
-print("2006 - Average monday value:", pairs_2006['Monday_value'].mean())
-print("2006 - Average friday value:", pairs_2006['Friday_value'].mean())
-print("2016 - Average monday value:", pairs_2016['Monday_value'].mean())
-print("2016 - Average friday value:", pairs_2016['Friday_value'].mean())
+# Plot date on the x-axis and value on the y-axis for 2006 data
+data_2006_df.plot(x='Date', y='Value', kind='line')
 
-# # Plot date on the x-axis and value on the y-axis for 2006 data
-# data_2006_df.plot(x='Date', y='Value', kind='line')
+# Add labels and title
+plt.xlabel('Date')
+plt.ylabel('Value')
+plt.title('Plot of Value over Time (2006)')
 
-# # Add labels and title
-# plt.xlabel('Date')
-# plt.ylabel('Value')
-# plt.title('Plot of Value over Time (2006)')
+# Show the plot
+plt.savefig("2006 values.png")
 
-# # Show the plot
-# plt.show()
+# Plot date on the x-axis and value on the y-axis for 2016 data
+data_2016_df.plot(x='Date', y='Value', kind='line')
 
-# # Plot date on the x-axis and value on the y-axis for 2016 data
-# data_2016_df.plot(x='Date', y='Value', kind='line')
+# Add labels and title
+plt.xlabel('Date')
+plt.ylabel('Value')
+plt.title('Plot of Value over Time (2016)')
 
-# # Add labels and title
-# plt.xlabel('Date')
-# plt.ylabel('Value')
-# plt.title('Plot of Value over Time (2016)')
-
-# # Show the plot
-# plt.show()
+# Show the plot
+plt.savefig("2016 values.png")

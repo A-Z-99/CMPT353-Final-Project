@@ -1,0 +1,13 @@
+2006 - Wilcoxon p-value: 0.5382812738724851
+2006 - Number of Negative Changes: 22
+2006 - Total Changes: 45
+2006 - Binomial p-value: 0.5
+2006 - Average monday value: 44088.82097036591
+2006 - Average friday value: 43950.22280468664
+
+2016 - Wilcoxon p-value: 0.11444247135693786
+2016 - Number of Negative Changes: 28
+2016 - Total Changes: 44
+2016 - Binomial p-value: 0.9756166170477627
+2016 - Average monday value: 182.53366650281507
+2016 - Average friday value: 183.30761118214235

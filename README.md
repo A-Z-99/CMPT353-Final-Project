@@ -1,6 +1,6 @@
 # Notes
 Each subtopic of the project is contained in a directory with the individual analyses contained in subdirectories.
-Read the readmes for any setup information. If no readme is present, just run `run-pipeline.py` (ensure your current directory is the same as `run-pipeline.py`)
+Read the readmes for any setup information. If no readme is present, just run `run-pipeline.py` (ensure your current directory is the same as the relevant`run-pipeline.py`)
 
 
 # Dataset sources

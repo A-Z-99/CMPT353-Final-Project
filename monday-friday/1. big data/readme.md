@@ -1,4 +1,11 @@
-# Setup and run
-download dataset from https://www.kaggle.com/datasets/borismarjanovic/price-volume-data-for-all-us-stocks-etfs (~0.8GB) and place it in the `datasets/monday-friday/` directory in the root of this project. It should be accessible through this directory via `../../datasets/monday-friday/Data/Stocks`
+# Setup
+Download the data from https://www.kaggle.com/datasets/borismarjanovic/price-volume-data-for-all-us-stocks-etfs
 
-run `run-pipeline.py`
+Place the uncompressed `Data/Stocks` folder in this directory.
+
+# Note
+You should manually run `spark-submit` in the terminal with:
+
+`spark-submit stocksETL.py Data/Stocks`
+
+Then run `run-pipeline.py`

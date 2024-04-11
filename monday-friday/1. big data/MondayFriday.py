@@ -27,9 +27,6 @@ column_labels = ['Date', 'Value', 'Day of week']
 data_2006_df.columns = column_labels
 data_2016_df.columns = column_labels
 
-# print(data_2006_df.head())
-# print(data_2016_df.head())
-
 # Get rid of weekends
 data_2006_df = data_2006_df[~data_2006_df['Day of week'].isin([1, 7])]
 data_2016_df = data_2016_df[~data_2016_df['Day of week'].isin([1, 7])]
@@ -82,7 +79,9 @@ if missing_values_2006 or missing_values_2016:
 pairs_2006.to_csv("2006 pairs.csv", index=False)
 pairs_2016.to_csv("2016 pairs.csv", index=False)
 
-""""""""
+"""
+Generate plots
+"""
 
 # Plot date on the x-axis and value on the y-axis for 2006 data
 pairs_2006.plot(x='Monday', y='change percent', kind='scatter')
@@ -181,6 +180,11 @@ with open('summary.txt', 'w') as f:
     print("2016 - Total Changes:", total_changes_2016)
     print("2016 - Average monday value:", pairs_2016['Monday_value'].mean())
     print("2016 - Average friday value:", pairs_2016['Friday_value'].mean())
+
+
+"""
+Plot raw value data
+"""
 
 # Plot date on the x-axis and value on the y-axis for 2006 data
 data_2006_df.plot(x='Date', y='Value', kind='line')

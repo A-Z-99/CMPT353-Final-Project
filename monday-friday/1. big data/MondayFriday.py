@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import matplotlib.pyplot as plt
 from scipy.stats import wilcoxon
-from scipy.stats import binom
+from scipy.stats import mannwhitneyu
 
 # Path to the directory containing the CSV files
 data_2006_path = "2006 data"
@@ -146,6 +146,10 @@ plt.savefig("2016 Percent Changes Histogram.png")
 """
 Perform statistical tests
 """
+# Perform the MannWhitneyU test
+mwu_2006 = mannwhitneyu(pairs_2006['Monday_value'], pairs_2006['Friday_value'])
+mwu_2016 = mannwhitneyu(pairs_2016['Monday_value'], pairs_2016['Friday_value'])
+
 # Perform the Wilcoxon signed-rank test
 wilcoxon_2006 = wilcoxon(pairs_2006['change percent'], zero_method='wilcox')
 wilcoxon_2016 = wilcoxon(pairs_2016['change percent'], zero_method='wilcox')
@@ -158,26 +162,23 @@ negative_changes_2016 = (pairs_2016['change percent'] < 0).sum()
 total_changes_2006 = len(pairs_2006)
 total_changes_2016 = len(pairs_2016)
 
-# Perform the sign test
-binom_p_value_2006 = binom.cdf(negative_changes_2006, total_changes_2006, 0.5)
-binom_p_value_2016 = binom.cdf(negative_changes_2016, total_changes_2016, 0.5)
 
 with open('summary.txt', 'w') as f:
     # Redirect stdout to the file
     import sys
     sys.stdout = f
+    print("2006 - u-test p-value:", mwu_2006.pvalue)
     print("2006 - Wilcoxon p-value:", wilcoxon_2006.pvalue)
     print("2006 - Number of Negative Changes:", negative_changes_2006)
     print("2006 - Total Changes:", total_changes_2006)
-    print("2006 - Binomial p-value:", binom_p_value_2006)
     print("2006 - Average monday value:", pairs_2006['Monday_value'].mean())
     print("2006 - Average friday value:", pairs_2006['Friday_value'].mean())
     print()
 
+    print("2016 - u-test p-value:", mwu_2016.pvalue)
     print("2016 - Wilcoxon p-value:", wilcoxon_2016.pvalue)
     print("2016 - Number of Negative Changes:", negative_changes_2016)
     print("2016 - Total Changes:", total_changes_2016)
-    print("2016 - Binomial p-value:", binom_p_value_2016)
     print("2016 - Average monday value:", pairs_2016['Monday_value'].mean())
     print("2016 - Average friday value:", pairs_2016['Friday_value'].mean())
 

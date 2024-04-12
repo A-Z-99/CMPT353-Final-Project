@@ -1,0 +1,6 @@
+u-test p-value: 0.009809503649952539
+Wilcoxon p-value: 0.0035601492439525373
+Number of decreased growths: 31
+Total pairs: 47
+Average monday growth percent: -0.4325531914893617
+Average friday growth percent: 0.23638297872340427

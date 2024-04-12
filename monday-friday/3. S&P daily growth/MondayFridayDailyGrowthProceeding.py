@@ -96,6 +96,8 @@ plt.savefig("Growth percent Histogram Procede" + suffix + ".png")
 # Plot growths in a histogram together
 # Create histogram for Monday percent changes
 # Define bin edges for equal bin size
+mondays.dropna(subset=['Monday_growth'], inplace=True)
+fridays.dropna(subset=['Friday_growth'], inplace=True)
 plt.clf()
 bin_edges = np.linspace(min(min(mondays['Monday_growth']), min(fridays['Friday_growth'])),
                         max(max(mondays['Monday_growth']), max(fridays['Friday_growth'])), 31)

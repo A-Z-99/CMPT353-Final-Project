@@ -18,10 +18,17 @@ def run_python_script2():
     except subprocess.CalledProcessError as e:
         print("Error running python3:", e)
 
+def run_graph():
+    try:
+        subprocess.run(["python3", "daily-growth-lineplot.py", "../../datasets/monday-friday/snpDataPercent.csv"], check=True)
+    except subprocess.CalledProcessError as e:
+        print("Error running python3:", e)
+
 def main():
     run_ETL()
     run_python_script1()
     run_python_script2()
+    run_graph()
 
 if __name__ == "__main__":
     main()

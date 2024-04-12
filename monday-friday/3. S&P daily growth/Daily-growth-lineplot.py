@@ -36,4 +36,4 @@ plt.axhline(y=0, color='black', linestyle='--')
 # Show legend
 plt.legend()
 
-plt.savefig("LinePercents" + suffix + ".png")
+plt.savefig("LinePercents" + suffix + ".png", dpi=300)

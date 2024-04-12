@@ -13,23 +13,19 @@ filtered_months = months[(months['Month'] == 'September') | (months['Month'] == 
 # Plot histograms for September and November
 plt.figure(figsize=(10, 6))
 
-# Get default color cycle
-colors1 = plt.cm.tab10.colors
-colors2 = plt.cm.tab20.colors
 # Dictionary to store the color corresponding to each month
-month_colors = {'September': colors1[8], 'November': colors2[0]}
+month_colors = {'September': 'blue', 'November': 'green'}
 
-plt.clf
 for month_name in ['September', 'November']:  # Only September and November
     month_data = filtered_months[filtered_months['Month'] == month_name]['Percent change']
     color = month_colors[month_name]
     
     # Plot histogram
-    plt.hist(month_data, bins=10, alpha=0.5, edgecolor='black', label=month_name, color=color)
+    plt.hist(month_data, bins=10, alpha=0.35, edgecolor='black', label=month_name, color=color)
     
     # Calculate and plot mean line for each month
     month_mean = month_data.mean()
-    plt.axvline(x=month_mean, color=color, linestyle='-.', label=f'{month_name} Mean: {month_mean:.2f}')
+    plt.axvline(x=month_mean, color=color, linestyle='--', label=f'{month_name} Mean: {month_mean:.2f}')
 
 plt.legend()
 plt.title('Histogram of Daily Percent Growths for September and November')

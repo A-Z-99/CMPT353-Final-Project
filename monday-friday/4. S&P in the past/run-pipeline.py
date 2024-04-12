@@ -20,7 +20,7 @@ def run_python_script_Succeed(name):
 
 def run_python_script_Percent(name):
     try:
-        subprocess.run(["python3", "../3. S&P percent change/MondayFridayPercent.py", "../../datasets/monday-friday/processed_" + name], check=True)
+        subprocess.run(["python3", "../3. S&P daily growth/MondayFridayPercent.py", "../../datasets/monday-friday/processed_" + name], check=True)
     except subprocess.CalledProcessError as e:
         print("Error running python3:", e)
 

@@ -1,0 +1,6 @@
+u-test p-value: 0.9795398800077821
+Wilcoxon p-value: 0.0015292442399880246
+Number of Negative Changes: 175
+Total Changes: 450
+Average monday value: 3072.0334888888883
+Average friday value: 3070.8543555555557

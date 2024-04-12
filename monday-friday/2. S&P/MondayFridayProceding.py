@@ -1,8 +1,10 @@
+# Pairs Mondays with the Friday of the previous week
+
 import pandas as pd
 import sys
 import matplotlib.pyplot as plt
 from scipy.stats import wilcoxon
-from scipy.stats import binom
+from scipy.stats import mannwhitneyu
 
 input_file = sys.argv[1]
 
@@ -39,79 +41,73 @@ pairs = pd.merge_asof(mondays.sort_values('Monday'), fridays.sort_values('Friday
 pairs['change'] = pairs['Monday_value'] - pairs['Friday_value'] 
 pairs['change percent'] = pairs['change']/pairs['Friday_value']*100
 
-""""""""
+# Check for missing values in the 'change percent' column
+missing_values = pairs['change percent'].isnull().any()
 
-# Plot date on the x-axis and value on the y-axis for 2006 data
+if missing_values:
+    print("Missing values detected. Handling missing values...")
+    
+    # Drop rows with missing values
+    pairs.dropna(subset=['change percent'], inplace=True)
+
+"""
+Generate plots
+"""
+
+# Plot date on the x-axis and value on the y-axis
 pairs.plot(x='Monday', y='change percent', kind='scatter')
+plt.axhline(y=0, color='black', linestyle='--')
 
 # Add labels and title
 plt.xlabel('Date')
 plt.ylabel('Change')
 plt.title('Percent change from Friday to Monday')
+plt.grid(True)
 
-# Show the plot
-plt.show()
+plt.savefig("Percent change Procede.png")
+
+# Plot histogram of percent changes
+
+plt.figure(figsize=(10, 6))
+
+plt.hist(pairs['change percent'], bins=20, color='blue', alpha=0.7)
+
+# Add vertical line at mean
+mean_percent_change = pairs['change percent'].mean()
+plt.axvline(x=mean_percent_change, color='red', linestyle='--', label=f'Mean: {mean_percent_change:.2f}')  
 
 
-# Check for missing values in the 'change percent' column
-missing_values_2006 = pairs['change percent'].isnull().any()
-missing_values_2016 = pairs['change percent'].isnull().any()
+# Add labels and title
+plt.xlabel('Percent Change')
+plt.ylabel('Frequency')
+plt.title('Histogram of Percent Changes from Friday to Monday')
+plt.legend()
+plt.savefig("Percent Changes Histogram Procede.png")
 
-if missing_values_2006 or missing_values_2016:
-    print("Missing values detected. Handling missing values...")
-    
-    # Drop rows with missing values
-    pairs.dropna(subset=['change percent'], inplace=True)
-    pairs.dropna(subset=['change percent'], inplace=True)
+"""
+Perform statistical tests
+"""
+# Perform the MannWhitneyU test
+mwu = mannwhitneyu(pairs['Monday_value'], pairs['Friday_value'])
 
 # Perform the Wilcoxon signed-rank test
-statistic, p_value = wilcoxon(pairs['change percent'], zero_method='wilcox')
+wilcoxon_test = wilcoxon(pairs['change percent'], zero_method='wilcox')
 
-print("Wilcoxon Statistic:", statistic)
-print("p-value:", p_value)
-
-
-"""
-Perform Binomial test
-"""
 # Calculate the number of negative changes
 negative_changes = (pairs['change percent'] < 0).sum()
 
 # Total number of changes
 total_changes = len(pairs)
 
-# Perform the sign test
-p_value = binom.cdf(negative_changes, total_changes, 0.5)
 
-print("Number of Negative Changes:", negative_changes)
-print("Total Changes:", total_changes)
-print("Probability of Negative Change:", p_value)
+with open('summary Procede.txt', 'w') as f:
+    # Redirect stdout to the file
+    import sys
+    sys.stdout = f
+    print("u-test p-value:", mwu.pvalue)
+    print("Wilcoxon p-value:", wilcoxon_test.pvalue)
+    print("Number of Negative Changes:", negative_changes)
+    print("Total Changes:", total_changes)
+    print("Average monday value:", pairs['Monday_value'].mean())
+    print("Average friday value:", pairs['Friday_value'].mean())
 
-print("Average monday value:", pairs['Monday_value'].mean())
-print("Average friday value:", pairs['Friday_value'].mean())
-print("Average percent change:", pairs['change percent'].mean())
-
-# anomalies = pairs[pairs['change percent'].abs() > 3 ]
-# print(anomalies)
-
-# # Plot date on the x-axis and value on the y-axis for 2006 data
-# data_2006_df.plot(x='Date', y='Value', kind='line')
-
-# # Add labels and title
-# plt.xlabel('Date')
-# plt.ylabel('Value')
-# plt.title('Plot of Value over Time (2006)')
-
-# # Show the plot
-# plt.show()
-
-# # Plot date on the x-axis and value on the y-axis for 2016 data
-# data_2016_df.plot(x='Date', y='Value', kind='line')
-
-# # Add labels and title
-# plt.xlabel('Date')
-# plt.ylabel('Value')
-# plt.title('Plot of Value over Time (2016)')
-
-# # Show the plot
-# plt.show()

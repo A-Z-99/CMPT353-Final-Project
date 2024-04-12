@@ -101,8 +101,6 @@ total_changes = len(pairs)
 
 
 with open("summary Procede" + suffix + ".txt", 'w') as f:
-    # Redirect stdout to the file
-    import sys
     sys.stdout = f
     print("u-test p-value:", mwu.pvalue)
     print("Wilcoxon p-value:", wilcoxon_test.pvalue)

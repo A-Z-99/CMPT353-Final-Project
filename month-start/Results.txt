@@ -1,0 +1,5 @@
+Mann-Whitney U-Test p-value:      0.10658727012548541
+Wilcoxon Test p-value:            0.357479320975013
+Number of months of data:         119
+Average First Day change percent: 0.05890756302521008
+Average Other Days change percent:0.04412877846513405

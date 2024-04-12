@@ -19,7 +19,7 @@ months['Month'] = months['Date'].dt.month.map(lambda x: calendar.month_name[x])
 months.dropna(inplace=True)
 
 # Write data to output file
-months.to_csv("../datasets/months/monthsData.csv")
+months.to_csv("../datasets/months/monthsData.csv", index=False)
 
 # Define an ordered dictionary to maintain the order of months
 month_order = OrderedDict((month, None) for month in calendar.month_name[1:])

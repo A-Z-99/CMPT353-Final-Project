@@ -12,15 +12,22 @@ def run_python_script():
     except subprocess.CalledProcessError as e:
         print("Error running python3:", e)
 
-def run_graphs():
+def run_graph1():
     try:
         subprocess.run(["python3", "graph.py", "../datasets/months/monthsData.csv"], check=True)
     except subprocess.CalledProcessError as e:
         print("Error running python3:", e)
 
+def run_graph2():
+    try:
+        subprocess.run(["python3", "sept-nov-graph.py", "../datasets/months/monthsData.csv"], check=True)
+    except subprocess.CalledProcessError as e:
+        print("Error running python3:", e)
+
 def main():
     run_python_script()
-    run_graphs()
+    run_graph1()
+    run_graph2()
 
 if __name__ == "__main__":
     main()

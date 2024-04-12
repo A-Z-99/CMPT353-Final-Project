@@ -6,15 +6,22 @@ def run_ETL():
     except subprocess.CalledProcessError as e:
         print("Error running python3:", e)
 
-def run_python_script():
+def run_python_script1():
     try:
-        subprocess.run(["python3", "MondayFridayPercent.py", "../../datasets/monday-friday/snpDataPercent.csv"], check=True)
+        subprocess.run(["python3", "MondayFridayDailyGrowthProceeding.py", "../../datasets/monday-friday/snpDataPercent.csv"], check=True)
+    except subprocess.CalledProcessError as e:
+        print("Error running python3:", e)
+
+def run_python_script2():
+    try:
+        subprocess.run(["python3", "MondayFridayDailyGrowthSucceeding.py", "../../datasets/monday-friday/snpDataPercent.csv"], check=True)
     except subprocess.CalledProcessError as e:
         print("Error running python3:", e)
 
 def main():
     run_ETL()
-    run_python_script()
+    run_python_script1()
+    run_python_script2()
 
 if __name__ == "__main__":
     main()

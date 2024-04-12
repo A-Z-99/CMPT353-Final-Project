@@ -25,7 +25,7 @@ def run_python_script_Percent(name):
         print("Error running python3:", e)
 
 def main():
-    datasets = ['snp1990.csv', 'snp1997.csv']
+    datasets = ['snp1980.csv','snp1990.csv', 'snp1997.csv']
     for dataset in datasets:
         run_ETL(dataset)
         run_python_script_Procede(dataset)

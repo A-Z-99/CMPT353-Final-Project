@@ -1,8 +1,7 @@
 import pandas as pd
 import sys
 import matplotlib.pyplot as plt
-from scipy import stats
-
+import statsmodels as stats
 
 OUTPUT_TEMPLATE = (
     "Original data normality p-values: {monday_normality_p:.3g} {friday_normality_p:.3g}\n"

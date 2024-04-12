@@ -30,16 +30,15 @@ mondays['Week'] = mondays['Date'].dt.isocalendar().week
 fridays['Week'] = fridays['Date'].dt.isocalendar().week
 
 # Rename columns to avoid conflicts after merge
-mondays = mondays.rename(columns={'Date': 'Monday', 'Value': 'Monday_value'})
-fridays= fridays.rename(columns={'Date': 'Friday', 'Value': 'Friday_value'})
+mondays = mondays.rename(columns={'Date': 'Monday', 'Value': 'Monday_value', 'Percent change': 'Monday_growth'})
+fridays= fridays.rename(columns={'Date': 'Friday', 'Value': 'Friday_value', 'Percent change': 'Friday_growth'})
 
-# Merge Mondays with their respective preceding Fridays based on the date difference of 4 days
+# Merge Mondays with their respective succeeding Fridays based on the date difference of 4 days
 pairs = pd.merge_asof(mondays.sort_values('Monday'), fridays.sort_values('Friday'), 
                             left_on='Monday', right_on='Friday', direction='forward', tolerance=pd.Timedelta(days=4))
 
-# Change indicates the change between the value on Monday and that of Friday
-pairs['change'] = pairs['Friday_value'] - pairs['Monday_value'] 
-pairs['change percent'] = pairs['change']/pairs['Monday_value']*100
+# Change indicates the change between the value on Friday and the value on Monday
+pairs['change percent'] = pairs['Friday_growth'] - pairs['Monday_growth'] 
 
 # Check for missing values in the 'change percent' column
 missing_values = pairs['change percent'].isnull().any()
@@ -50,6 +49,13 @@ if missing_values:
     # Drop rows with missing values
     pairs.dropna(subset=['change percent'], inplace=True)
 
+pairs['Growth difference'] = pairs['change percent'].round(2)
+
+# Save DataFrame to CSV file using the temporary alias
+pairs.to_csv("succeeding" + suffix + ".csv", index=False, columns=['Monday', 'Friday', 'Monday_growth', 'Friday_growth', 'Growth difference'])
+
+# Drop the temporary alias after saving
+pairs.drop(columns=['Growth difference'], inplace=True)
 """
 Generate plots
 """
@@ -60,11 +66,11 @@ plt.axhline(y=0, color='black', linestyle='--')
 
 # Add labels and title
 plt.xlabel('Date')
-plt.ylabel('Change')
-plt.title('Percent change from Monday to Friday')
+plt.ylabel('Change in growth percent')
+plt.title('Difference in growth percent between Monday and Friday')
 plt.grid(True)
 
-plt.savefig("Percent change Succeed" + suffix + ".png")
+plt.savefig("Growth percent Succeed" + suffix + ".png")
 
 # Plot histogram of percent changes
 
@@ -78,17 +84,17 @@ plt.axvline(x=mean_percent_change, color='red', linestyle='--', label=f'Mean: {m
 
 
 # Add labels and title
-plt.xlabel('Percent Change')
+plt.xlabel('Difference in growth percent')
 plt.ylabel('Frequency')
-plt.title('Histogram of Percent Changes from Monday to Friday')
+plt.title('Histogram of Difference in growth percent between Monday and Friday')
 plt.legend()
-plt.savefig("Percent Changes Histogram Succeed" + suffix + ".png")
+plt.savefig("Growth percent Histogram Succeed" + suffix + ".png")
 
 """
 Perform statistical tests
 """
 # Perform the MannWhitneyU test
-mwu = mannwhitneyu(pairs['Monday_value'], pairs['Friday_value'])
+mwu = mannwhitneyu(pairs['Monday_growth'], pairs['Friday_growth'])
 
 # Perform the Wilcoxon signed-rank test
 wilcoxon_test = wilcoxon(pairs['change percent'], zero_method='wilcox')
@@ -100,35 +106,13 @@ negative_changes = (pairs['change percent'] < 0).sum()
 total_changes = len(pairs)
 
 
-with open("summary Succeed" + suffix + ".txt", 'w') as f:
+with open("summary growths Succeed" + suffix + ".txt", 'w') as f:
     # Redirect stdout to the file
     import sys
     sys.stdout = f
     print("u-test p-value:", mwu.pvalue)
     print("Wilcoxon p-value:", wilcoxon_test.pvalue)
-    print("Number of Negative Changes:", negative_changes)
-    print("Total Changes:", total_changes)
-    print("Average monday value:", pairs['Monday_value'].mean())
-    print("Average friday value:", pairs['Friday_value'].mean())
-
-
-"""
-Plot values
-"""
-plt.clf()
-plt.grid(True)
-# Plot all Monday values in blue
-plt.plot(pairs['Monday'], pairs['Monday_value'], color='blue', label='Monday')
-
-# Plot all Friday values in red
-plt.plot(pairs['Friday'], pairs['Friday_value'], color='red', label='Friday')
-
-# Add labels and title
-plt.xlabel('Date')
-plt.ylabel('Value')
-plt.title('Monday and Friday Values')
-
-# Show legend
-plt.legend()
-
-plt.savefig("Values" + suffix + ".png")
+    print("Number of decreased growths:", negative_changes)
+    print("Total pairs:", total_changes)
+    print("Average monday growth percent:", pairs['Monday_growth'].mean())
+    print("Average friday growth percent:", pairs['Friday_growth'].mean())

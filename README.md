@@ -6,7 +6,7 @@ Read the readmes for any setup information. If no readme is present, just run `r
 # Dataset sources
 
 ## S&P index datasets
-https://www.marketwatch.com/investing/index/spx/ (limited to 1 year per download but goes very far back)
+https://www.marketwatch.com/investing/index/spx/download-data (limited to 1 year per download but goes very far back)
 
 https://www.nasdaq.com/market-activity/index/spx/historical (only goes back 10 years from the current day)
 

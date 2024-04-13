@@ -33,9 +33,12 @@ def main():
 
     # Perform the statistical tests (u-tests)
     results = perform_statistical_tests(rally_data, generic_data)
-    print("Mann-Whitney U-tests comparing the Santa Claus Rally data to the generic two-week periods:")
-    print(f"Start to peak percent change: U-statistic = {results[0]}, P-value = {results[1]}")
-    print(f"Peak to end percent change: U-statistic = {results[2]}, P-value = {results[3]}")
+    with open("summary.txt", 'w') as f:
+        import sys
+        sys.stdout = f
+        print("Mann-Whitney U-tests comparing the Santa Claus Rally data to the generic two-week periods:")
+        print(f"Start to peak percent change: U-statistic = {results[0]}, P-value = {results[1]}")
+        print(f"Peak to end percent change: U-statistic = {results[2]}, P-value = {results[3]}")
 
 if __name__ == '__main__':
     main()

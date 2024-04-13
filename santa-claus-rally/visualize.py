@@ -21,7 +21,7 @@ def plot_price_movements(rally_data):
     plt.grid(True)
     plt.xticks(rotation=45)
     plt.tight_layout()
-    plt.savefig('../datasets/santa-claus/SC_price_movements.png')
+    plt.savefig('SC_price_movements.png')
 
 def plot_histograms(rally_data, generic_data, column_name, title, color1, color2):
     plt.figure(figsize=(12, 6))
@@ -32,7 +32,7 @@ def plot_histograms(rally_data, generic_data, column_name, title, color1, color2
     plt.ylabel('Density')
     plt.legend()
     plt.grid(True)
-    plt.savefig(f'../datasets/santa-claus/SC_{title.replace(" ", "_").lower()}.png')
+    plt.savefig(f'SC_{title.replace(" ", "_").lower()}.png')
 
 def main():
     rally_data, generic_data = load_data()

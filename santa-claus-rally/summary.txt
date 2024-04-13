@@ -1,0 +1,3 @@
+Mann-Whitney U-tests comparing the Santa Claus Rally data to the generic two-week periods:
+Start to peak percent change: U-statistic = 458.5, P-value = 0.387407542409144
+Peak to end percent change: U-statistic = 480.0, P-value = 0.5034867026559737

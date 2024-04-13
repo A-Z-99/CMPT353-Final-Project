@@ -21,24 +21,24 @@ def plot_price_movements(rally_data):
     plt.grid(True)
     plt.xticks(rotation=45)
     plt.tight_layout()
-    plt.show()
+    plt.savefig('../datasets/santa-claus/SC_price_movements.png')
 
 def plot_histograms(rally_data, generic_data, column_name, title, color1, color2):
     plt.figure(figsize=(12, 6))
-    n, bins, patches = plt.hist(rally_data[column_name], bins=20, alpha=0.5, label=f'Santa Claus Rally {title}', color=color1, density=True)
-    n, bins, patches = plt.hist(generic_data[column_name], bins=bins, alpha=0.5, label=f'Generic 2-Week {title}', color=color2, density=True)
+    n, bins, patches = plt.hist(rally_data[column_name], bins=20, alpha=0.5, label=f'Santa Claus Rally {title}', color=color1, density=True, edgecolor='black')
+    n, bins, patches = plt.hist(generic_data[column_name], bins=bins, alpha=0.5, label=f'Generic 2-Week {title}', color=color2, density=True, edgecolor='black')
     plt.title(f'Comparison of {title}: Santa Claus Rally vs. Generic 2-Week Periods')
     plt.xlabel(f'{title} (%)')
     plt.ylabel('Density')
     plt.legend()
     plt.grid(True)
-    plt.show()
+    plt.savefig(f'../datasets/santa-claus/SC_{title.replace(" ", "_").lower()}.png')
 
 def main():
     rally_data, generic_data = load_data()
     plot_price_movements(rally_data)
-    plot_histograms(rally_data, generic_data, 'start to peak percent change', 'Start to Peak Percent Changes', 'blue', 'red')
-    plot_histograms(rally_data, generic_data, 'peak to end percent change', 'Peak to End Percent Changes', 'green', 'orange')
+    plot_histograms(rally_data, generic_data, 'start to peak percent change', 'Start to Peak Percent Changes', 'green', 'blue')
+    plot_histograms(rally_data, generic_data, 'peak to end percent change', 'Peak to End Percent Changes', 'green', 'blue')
 
 if __name__ == '__main__':
     main()

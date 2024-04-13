@@ -6,7 +6,8 @@ scripts = [
     'condensed_santa.py',
     'compute_santa_peak.py',
     'generic_two_week.py',
-    'statistical_comparison.py'
+    'statistical_comparison.py',
+    'visualize.py'
 ]
 
 def run_script(script_name):
